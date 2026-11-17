@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'pages/login_page.dart';
 import 'pages/main_page.dart';
 import 'services/favorite_service.dart';
+import 'services/notification_service.dart';
 
 const kRed = Color(0xFFF44336);
 const kCard = Color(0xFF2C2C2C);
@@ -10,6 +11,7 @@ const kCard = Color(0xFF2C2C2C);
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await FavoriteService.init();
+  await NotificationService.init();
   final prefs = await SharedPreferences.getInstance();
   runApp(MyApp(loggedIn: prefs.getString('username') != null));
 }

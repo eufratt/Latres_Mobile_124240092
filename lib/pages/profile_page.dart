@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../services/location_service.dart';
 import 'login_page.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -36,10 +37,44 @@ class ProfilePage extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.white70, fontSize: 16, height: 1.5),
               ),
+              const SizedBox(height: 16),
+              const _LocationInfo(),
               const SizedBox(height: 24),
               FilledButton(onPressed: () => _logout(context), child: const Text('Logout')),
             ]),
           ),
         ),
       );
+}
+
+class _LocationInfo extends StatefulWidget {
+  const _LocationInfo();
+  @override
+  State<_LocationInfo> createState() => _LocationInfoState();
+}
+
+class _LocationInfoState extends State<_LocationInfo> {
+  String _text = 'Lokasi belum diambil';
+  bool _loading = false;
+
+  Future<void> _fetch() async {
+    setState(() => _loading = true);
+    try {
+      final p = await LocationService.current();
+      _text = 'Lat: ${p.latitude.toStringAsFixed(5)}, Lng: ${p.longitude.toStringAsFixed(5)}';
+    } catch (e) {
+      _text = '$e';
+    }
+    if (mounted) setState(() => _loading = false);
+  }
+
+  @override
+  Widget build(BuildContext context) => Column(children: [
+        Text(_text, style: const TextStyle(color: Colors.white70)),
+        TextButton.icon(
+          onPressed: _loading ? null : _fetch,
+          icon: const Icon(Icons.location_on, color: Colors.red),
+          label: Text(_loading ? 'Mencari...' : 'Lokasi saya'),
+        ),
+      ]);
 }

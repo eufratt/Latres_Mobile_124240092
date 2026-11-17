@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../main.dart';
 import '../services/favorite_service.dart';
+import '../services/notification_service.dart';
 import '../services/tvmaze_service.dart';
 
 class DetailPage extends StatelessWidget {
@@ -68,8 +69,14 @@ class DetailPage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10),
                           child: InkWell(
                             borderRadius: BorderRadius.circular(10),
-                            onTap: () => FavoriteService.toggle(
-                                id, s['name'], s['image']?['medium'], rating),
+                            onTap: () async {
+                              final wasFav = FavoriteService.isFav(id);
+                              await FavoriteService.toggle(
+                                  id, s['name'], s['image']?['medium'], rating);
+                              NotificationService.show(
+                                  wasFav ? 'Dihapus dari favorit' : 'Ditambahkan ke favorit',
+                                  s['name']);
+                            },
                             child: SizedBox(
                               width: 52,
                               height: 52,

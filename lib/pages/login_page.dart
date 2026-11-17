@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../services/notification_service.dart';
 import 'main_page.dart';
 
 // GANTI dengan NIM kamu.
@@ -19,6 +20,7 @@ class _LoginPageState extends State<LoginPage> {
     if (_user.text == kNim && _pass.text == '123') {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('username', _user.text);
+      NotificationService.show('Login berhasil', 'Selamat datang di NontonSkuy!');
       if (!mounted) return;
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const MainPage()));
     } else {
